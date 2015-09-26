@@ -2,6 +2,7 @@
 ## the invese of a matrix specified by user.
 ## This pair of function is one of the solutions which improves times and 
 ## the cost of the hardware used for matrix inversion.
+## NB: This code works only if matrix is square and invertible.
 
 ## The "makeChacheMatrix" function stores the inverse of a matrix created 
 ## in the solve function.
@@ -19,9 +20,9 @@ makeCacheMatrix <- function(x = matrix()) {
   
   ## Get the matrix value
   get <- function () x
-  ##  Set the inverse of the matrix and stores in cache
+  ##  Set the inverse of the matrix and stores it in cache
   setInverse <-function(inverse) cachemx <<-inverse
-  ## Get the inverse of the matrix
+  ## Get the inverse matrix
   getInverse <-function () cachemx
   
   ## Return the above functions to the working environment 
@@ -29,3 +30,31 @@ makeCacheMatrix <- function(x = matrix()) {
         setInverse = setInverse,
         getInverse = getInverse)
 }
+
+
+## The "cacheSolve" function computes the invese of the matrix set 
+## in the "makeCacheMatrix" function above. 
+## Unless the matrix is a new matrix, this function retrieves
+## the cached matrices. 
+
+cacheSolve <- function(x, ...) {
+  
+  ## Get the inversed matrix saved in cache
+  cachemx <- x$getInverse()
+  
+  ## If the inverse matrix for the matrix exists in cache, 
+  ## display a message ("getting cached data"), then 
+  ## get the inverted matrix from cache 
+  
+  if (!is.null(cachemx)) {
+    message ("getting cached data")
+    return (cachemx)
+    }
+  
+  ## If not, get the matrix in the working environment
+  matrix <-x$get()
+  ## then create the invese matrix and save it in cache
+  cachemx <-solve(matrix, ...)
+  x$setInverse(cachemx)
+  cachemx
+ }
